@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #fafaf5;
+      }
+
+      .profile-display {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+      }
+
+      .profile-display h2 {
+        color: #5b5454;
+        margin-bottom: 20px;
+      }
+
+      .profile-info {
+        text-align: left;
+        color: #5b5454;
+        margin-bottom: 10px;
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .back-link,
+      .logout-button {
+        text-decoration: none;
+        color: #076f05;
+        font-weight: bold;
+        padding: 10px 20px;
+        border: none;
+        background: none;
+        cursor: pointer;
+      }
+
+      .logout-button {
+        color: #ff6b6b;
+      }
+
+      a:hover,
+      button:hover {
+        transition-duration: 0.3s;
+        transition-timing-function: ease-in-out;
+        color: grey;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="profile-display">
+      <h2>User Profile</h2>
+      <div class="profile-info">
+        <p><strong>First Name:</strong> <span id="first-name"></span></p>
+        <p><strong>Last Name:</strong> <span id="last-name"></span></p>
+        <p><strong>Gmail:</strong> <span id="email"></span></p>
+      </div>
+      <div class="button-group">
+        <a href="index.html" class="back-link">Go Back</a>
+        <button class="logout-button" onclick="logout()">Log Off</button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const userData = JSON.parse(sessionStorage.getItem("userData"));
+        if (userData) {
+          document.getElementById("first-name").textContent =
+            userData.firstName;
+          document.getElementById("last-name").textContent = userData.lastName;
+          document.getElementById("email").textContent = userData.email;
+        } else {
+          window.location.href = "profile.html";
+        }
+      });
+
+      function logout() {
+        sessionStorage.removeItem("userData");
+        console.log("User data removed.");
+        window.location.href = "profile.html";
+      }
+    </script>
+  </body>
+</html>

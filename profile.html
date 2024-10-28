@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Setup</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #fafaf5;
+      }
+
+      .profile-form {
+        width: 100%;
+        max-width: 400px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .profile-form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #5b5454;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #5b5454;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #e6e6e6;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .confirm-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: not-allowed;
+        background-color: grey;
+        color: white;
+      }
+
+      .confirm-button.active {
+        background-color: #4e9e6e;
+        cursor: pointer;
+      }
+
+      .back-link {
+        text-decoration: none;
+        color: #076f05;
+        font-weight: bold;
+      }
+
+      button:hover.active {
+        transform: scale(1.1);
+        transition-duration: 0.3s;
+        transition-timing-function: ease-in-out;
+      }
+
+      a:hover {
+        transition-duration: 0.3s;
+        transition-timing-function: ease-in-out;
+        color: grey;
+      }
+
+      button {
+        box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      h2,
+      label {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="profile-form">
+      <h2>Profile Setup</h2>
+      <div class="form-group">
+        <label for="first-name">First Name</label>
+        <input type="text" id="first-name" required />
+      </div>
+      <div class="form-group">
+        <label for="last-name">Last Name</label>
+        <input type="text" id="last-name" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Gmail</label>
+        <input type="email" id="email" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" required />
+      </div>
+
+      <div class="button-group">
+        <button
+          class="confirm-button"
+          id="confirm-button"
+          onclick="submitForm()"
+          disabled
+        >
+          Confirm
+        </button>
+        <a href="index.html" class="back-link">Go Back</a>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const userData = sessionStorage.getItem("userData");
+        if (userData) {
+          window.location.href = "userprofile.html";
+        }
+      });
+
+      const firstNameInput = document.getElementById("first-name");
+      const lastNameInput = document.getElementById("last-name");
+      const emailInput = document.getElementById("email");
+      const passwordInput = document.getElementById("password");
+      const confirmButton = document.getElementById("confirm-button");
+
+      function checkFields() {
+        if (
+          firstNameInput.value.trim() &&
+          lastNameInput.value.trim() &&
+          emailInput.value.trim() &&
+          passwordInput.value.trim()
+        ) {
+          confirmButton.classList.add("active");
+          confirmButton.disabled = false;
+        } else {
+          confirmButton.classList.remove("active");
+          confirmButton.disabled = true;
+        }
+      }
+
+      firstNameInput.addEventListener("input", checkFields);
+      lastNameInput.addEventListener("input", checkFields);
+      emailInput.addEventListener("input", checkFields);
+      passwordInput.addEventListener("input", checkFields);
+
+      function submitForm() {
+        if (confirmButton.classList.contains("active")) {
+          const userData = {
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+            email: emailInput.value,
+          };
+
+          sessionStorage.setItem("userData", JSON.stringify(userData));
+          console.log("User data saved:", userData);
+          window.location.href = "userprofile.html";
+        }
+      }
+    </script>
+  </body>
+</html>

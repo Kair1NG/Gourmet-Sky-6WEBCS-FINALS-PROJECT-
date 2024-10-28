@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm Order - Gourmet Sky</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&family=Shadows+Into+Light&display=swap");
+
+      body {
+        font-family: "Inknut Antiqua", serif;
+        color: #5b5454;
+        margin: 0;
+        padding: 0;
+        background-color: #fafaf5;
+        max-width: 1440px;
+        margin: 0 auto;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 2em;
+        color: #076f05;
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      .nav-links a,
+      .confirm-order-button {
+        color: #5b5454;
+        text-decoration: none;
+        margin-right: 20px;
+        font-weight: bold;
+      }
+
+      .confirm-order-button {
+        height: 66px;
+        width: 160px;
+        background-color: #076f05;
+        color: white;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .order-summary {
+        padding: 20px;
+      }
+
+      .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        border-bottom: 1px solid #e6e6e6;
+      }
+
+      .order-button {
+        height: 66px;
+        width: 143px;
+        background-color: #076f05;
+        color: white;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .item-name {
+        font-size: 1.5em;
+      }
+
+      .item-price {
+        color: #4e9e6e;
+        font-size: 1.2em;
+      }
+
+      .quantity-control {
+        display: flex;
+        align-items: center;
+      }
+
+      .quantity-control button {
+        background-color: #076f05;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin: 0 10px;
+        cursor: pointer;
+      }
+
+      .total-price {
+        font-size: 1.5em;
+        font-weight: bold;
+        text-align: right;
+        margin-top: 20px;
+      }
+
+      .message {
+        font-size: 1.2em;
+        color: #076f05;
+        text-align: center;
+        margin-top: 20px;
+        display: none;
+      }
+      button:hover {
+        transform: scale(1.1);
+        transition-duration: 0.3s;
+        transition-timing-function: ease-in-out;
+      }
+
+      a:hover {
+        transition-duration: 0.3s;
+        transition-timing-function: ease-in-out;
+        color: #4e9e6e;
+      }
+
+      button {
+        box-shadow: 2px 3px 8px rgba(0, 0, 0, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="logo">Gourmet |<br />&nbsp;&nbsp;&nbsp;| Sky</div>
+        <div class="nav-links">
+          <a href="profile.html">Profile</a>
+          <a href="contactus.html">Contact Us</a>
+          <a href="#">About</a>
+          <a href="#">Rewards</a>
+          <button
+            class="order-button"
+            id="confirm-order-button"
+            onclick="confirmPurchase()"
+          >
+            Confirm Order
+          </button>
+        </div>
+      </header>
+
+      <main class="order-summary">
+        <h1>Your Order Summary</h1>
+        <div id="order-items"></div>
+        <div class="order-total">
+          <p>Total: $<span id="total-price">0.00</span></p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      let orderItems = JSON.parse(localStorage.getItem("orderItems")) || [];
+      let totalPrice = 0;
+
+      function displayOrderItems() {
+        const orderItemsContainer = document.getElementById("order-items");
+        orderItemsContainer.innerHTML = "";
+
+        orderItems.forEach((item, index) => {
+          const itemElement = document.createElement("div");
+          itemElement.className = "order-item";
+          itemElement.innerHTML = `
+              <p>${item.name} - $${item.price.toFixed(2)}</p>
+              <p>Quantity: <button onclick="changeQuantity(${index}, -1)">-</button>
+              ${item.quantity}
+              <button onclick="changeQuantity(${index}, 1)">+</button></p>
+              <p>Subtotal: $<span class="subtotal">${(
+                item.price * item.quantity
+              ).toFixed(2)}</span></p>
+            `;
+          orderItemsContainer.appendChild(itemElement);
+        });
+
+        updateTotalPrice();
+      }
+
+      function changeQuantity(index, delta) {
+        orderItems[index].quantity += delta;
+        if (orderItems[index].quantity <= 0) {
+          orderItems.splice(index, 1);
+        }
+        updateOrderItems();
+        displayOrderItems();
+      }
+
+      function updateTotalPrice() {
+        totalPrice = orderItems.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0
+        );
+        document.getElementById("total-price").innerText =
+          totalPrice.toFixed(2);
+      }
+
+      function updateOrderItems() {
+        localStorage.setItem("orderItems", JSON.stringify(orderItems));
+      }
+
+      function confirmPurchase() {
+        alert("Thank you for your purchase!");
+        localStorage.removeItem("orderItems");
+        window.location.href = "index.html";
+      }
+
+      displayOrderItems();
+    </script>
+  </body>
+</html>
